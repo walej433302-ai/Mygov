@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { MobileShell } from '../components/MobileShell';
 import { MedicareCard } from '../components/MedicareCard';
 import { HealthcareCard } from '../components/HealthcareCard';
 import { EditMedicareModal } from '../components/EditMedicareModal';
 import { EditHealthcareModal } from '../components/EditHealthcareModal';
 import { useMedicareData } from '../hooks/useMedicareData';
-import { ChevronLeft, Edit2, FileText, Clock, ShieldCheck, Download } from 'lucide-react';
+import { ChevronLeft, FileText, Clock, ShieldCheck, Download } from 'lucide-react';
 import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,6 +14,36 @@ export default function Medicare() {
   const [activeTab, setActiveTab] = useState<'medicare' | 'health' | 'claims' | 'history'>('medicare');
   const [isEditingMedicare, setIsEditingMedicare] = useState(false);
   const [isEditingHealthcare, setIsEditingHealthcare] = useState(false);
+  const medicareTabCount = useRef(0);
+  const medicareTabTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const healthcareTabCount = useRef(0);
+  const healthcareTabTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMedicareCardTap = useCallback(() => {
+    medicareTabCount.current += 1;
+    if (medicareTabTimer.current) clearTimeout(medicareTabTimer.current);
+    if (medicareTabCount.current >= 5) {
+      medicareTabCount.current = 0;
+      setIsEditingMedicare(true);
+    } else {
+      medicareTabTimer.current = setTimeout(() => {
+        medicareTabCount.current = 0;
+      }, 1500);
+    }
+  }, []);
+
+  const handleHealthcareCardTap = useCallback(() => {
+    healthcareTabCount.current += 1;
+    if (healthcareTabTimer.current) clearTimeout(healthcareTabTimer.current);
+    if (healthcareTabCount.current >= 5) {
+      healthcareTabCount.current = 0;
+      setIsEditingHealthcare(true);
+    } else {
+      healthcareTabTimer.current = setTimeout(() => {
+        healthcareTabCount.current = 0;
+      }, 1500);
+    }
+  }, []);
 
   const tabs = [
     { id: 'medicare', label: 'Medicare Card' },
@@ -73,18 +103,11 @@ export default function Medicare() {
               {/* TAB: MEDICARE */}
               {activeTab === 'medicare' && (
                 <div className="space-y-4">
-                  <MedicareCard data={medicareCard} />
-                  
-                  {!isEditingMedicare ? (
-                    <button 
-                      onClick={() => setIsEditingMedicare(true)}
-                      className="w-full flex items-center justify-center bg-white border border-border rounded-lg py-3.5 text-sm font-semibold text-primary shadow-sm hover:bg-gray-50 transition-colors"
-                      data-testid="btn-edit-medicare"
-                    >
-                      <Edit2 size={16} className="mr-2" />
-                      Edit Card Details
-                    </button>
-                  ) : (
+                  <div onClick={handleMedicareCardTap} className="cursor-pointer select-none" data-testid="medicare-card-tappable">
+                    <MedicareCard data={medicareCard} />
+                  </div>
+
+                  {isEditingMedicare && (
                     <EditMedicareModal 
                       data={medicareCard} 
                       onSave={(data) => {
@@ -114,18 +137,11 @@ export default function Medicare() {
               {/* TAB: HEALTHCARE CONCESSION */}
               {activeTab === 'health' && (
                 <div className="space-y-4">
-                  <HealthcareCard data={healthcareCard} />
-                  
-                  {!isEditingHealthcare ? (
-                    <button 
-                      onClick={() => setIsEditingHealthcare(true)}
-                      className="w-full flex items-center justify-center bg-white border border-border rounded-lg py-3.5 text-sm font-semibold text-primary shadow-sm hover:bg-gray-50 transition-colors"
-                      data-testid="btn-edit-healthcare"
-                    >
-                      <Edit2 size={16} className="mr-2" />
-                      Edit Card Details
-                    </button>
-                  ) : (
+                  <div onClick={handleHealthcareCardTap} className="cursor-pointer select-none" data-testid="healthcare-card-tappable">
+                    <HealthcareCard data={healthcareCard} />
+                  </div>
+
+                  {isEditingHealthcare && (
                     <EditHealthcareModal 
                       data={healthcareCard} 
                       onSave={(data) => {

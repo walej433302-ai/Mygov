@@ -7,6 +7,8 @@ import { Route, Switch, Router as WouterRouter } from 'wouter';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Medicare from './pages/Medicare';
+import Wallet from './pages/Wallet';
+import Services from './pages/Services';
 import ATO from './pages/ATO';
 import Centrelink from './pages/Centrelink';
 import Inbox from './pages/Inbox';
@@ -19,6 +21,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Login} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/wallet" component={Wallet} />
+      <Route path="/services" component={Services} />
       <Route path="/medicare" component={Medicare} />
       <Route path="/ato" component={ATO} />
       <Route path="/centrelink" component={Centrelink} />

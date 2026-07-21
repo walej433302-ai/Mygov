@@ -76,7 +76,7 @@
   --elevate-1: rgba(0, 0, 0, 0.03);
   --elevate-2: rgba(0, 0, 0, 0.08);
 
-  --background: 210 33% 95%; /* #F0F4F8 */
+  --background: 0 0% 96%; /* #F5F5F5 */
   --foreground: 0 0% 10%; /* #1A1A1A */
   
   --border: 210 21% 84%; /* #D0D7DE */
@@ -98,7 +98,7 @@
   --popover-foreground: 0 0% 10%;
   --popover-border: 210 21% 84%;
 
-  --primary: 212 67% 32%; /* #1B4F8A - myGov Blue */
+  --primary: 186 60% 54%; /* #3EC6D4 - myGov Teal */
   --primary-foreground: 0 0% 100%;
 
   --secondary: 0 0% 100%;

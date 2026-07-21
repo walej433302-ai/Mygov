@@ -6,6 +6,7 @@ export interface UserProfile {
   email: string;
   phone: string;
   address: string;
+  lastSignedIn?: string;
 }
 
 export interface MedicareMember {
@@ -27,23 +28,25 @@ export interface HealthcareCardData {
   crn: string;
   validFrom: string;
   validTo: string;
+  paymentType: string;
   members: HealthcareMember[];
 }
 
 const defaultProfile: UserProfile = {
-  name: "Alex Johnson",
+  name: "James Andrew",
   dob: "15 March 1988",
-  email: "alex.johnson@email.com",
+  email: "james.andrew@email.com",
   phone: "0412 345 678",
-  address: "42 Smith Street, Melbourne VIC 3000"
+  address: "42 Smith Street, Melbourne VIC 3000",
+  lastSignedIn: "21 Jul 2026 at 4:50 am"
 };
 
 const defaultMedicare: MedicareCardData = {
-  number: "2428 77653 1",
+  number: "2428 77142 1",
   expiry: "06/2026",
   members: [
-    { name: "ALEX JOHNSON", irn: "1" },
-    { name: "JAMIE JOHNSON", irn: "2" }
+    { name: "JAMES ANDREW", irn: "1" },
+    { name: "JAMIE ANDREW", irn: "2" }
   ]
 };
 
@@ -51,9 +54,10 @@ const defaultHealthcare: HealthcareCardData = {
   crn: "234 567 890 1A",
   validFrom: "01 Jan 2025",
   validTo: "31 Dec 2025",
+  paymentType: "JSP",
   members: [
-    { name: "ALEX JOHNSON" },
-    { name: "JAMIE JOHNSON" }
+    { name: "JAMES ANDREW" },
+    { name: "JAMIE ANDREW" }
   ]
 };
 

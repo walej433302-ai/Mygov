@@ -5,6 +5,7 @@ import { useQRToken } from '../hooks/useQRToken';
 
 interface Props {
   data: MedicareCardData;
+  showQR?: boolean;
 }
 
 function maskNumber(num: string): string {
@@ -52,7 +53,7 @@ function CountdownRing({ secondsLeft, lifetime }: { secondsLeft: number; lifetim
   );
 }
 
-export function MedicareCard({ data }: Props) {
+export function MedicareCard({ data, showQR = false }: Props) {
   const seed = `medicare:${data.number}:${data.members[0]?.name ?? ''}`;
   const { qrValue, secondsLeft, lifetime } = useQRToken(seed);
   const masked = maskNumber(data.number);
@@ -86,24 +87,26 @@ export function MedicareCard({ data }: Props) {
         <span className="text-[#1A2E1A] font-bold text-2xl tracking-widest font-mono">{masked}</span>
       </div>
 
-      {/* QR code + countdown row */}
-      <div className="relative z-10 mx-4 mb-4 mt-1 bg-[#1A6B2A]/80 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
-        <div className="bg-white rounded-lg p-1.5 shadow">
-          <QRCodeSVG
-            value={qrValue}
-            size={72}
-            level="M"
-            bgColor="#ffffff"
-            fgColor="#1A2E1A"
-          />
+      {/* QR code + countdown row — visible after first tap */}
+      {showQR && (
+        <div className="relative z-10 mx-4 mb-4 mt-1 bg-[#1A6B2A]/80 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+          <div className="bg-white rounded-lg p-1.5 shadow">
+            <QRCodeSVG
+              value={qrValue}
+              size={72}
+              level="M"
+              bgColor="#ffffff"
+              fgColor="#1A2E1A"
+            />
+          </div>
+          <div className="flex-1 flex flex-col justify-center space-y-1">
+            <p className="text-white font-semibold text-[11px] leading-tight">Scan to verify</p>
+            <p className="text-white/70 text-[10px] leading-tight">Refreshes automatically</p>
+            <p className="text-white/60 text-[9px] font-mono mt-1 tracking-wide">{data.number}</p>
+          </div>
+          <CountdownRing secondsLeft={secondsLeft} lifetime={lifetime} />
         </div>
-        <div className="flex-1 flex flex-col justify-center space-y-1">
-          <p className="text-white font-semibold text-[11px] leading-tight">Scan to verify</p>
-          <p className="text-white/70 text-[10px] leading-tight">Refreshes automatically</p>
-          <p className="text-white/60 text-[9px] font-mono mt-1 tracking-wide">{data.number}</p>
-        </div>
-        <CountdownRing secondsLeft={secondsLeft} lifetime={lifetime} />
-      </div>
+      )}
     </div>
   );
 }

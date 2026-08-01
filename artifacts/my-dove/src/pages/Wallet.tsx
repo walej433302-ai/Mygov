@@ -13,18 +13,22 @@ export default function Wallet() {
   const { medicareCard, setMedicareCard, healthcareCard, setHealthcareCard } = useMedicareData();
   const [editingMedicare, setEditingMedicare] = useState(false);
   const [editingHealthcare, setEditingHealthcare] = useState(false);
+  const [showMedicareQR, setShowMedicareQR] = useState(false);
+  const [showHealthcareQR, setShowHealthcareQR] = useState(false);
 
-  // 5-tap to edit
   const medTapCount = useRef(0);
   const medTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hcTapCount = useRef(0);
   const hcTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleMedicareTap = useCallback(() => {
+    // Show QR on the very first tap
+    if (medTapCount.current === 0) setShowMedicareQR(true);
     medTapCount.current += 1;
     if (medTapTimer.current) clearTimeout(medTapTimer.current);
     if (medTapCount.current >= 5) {
       medTapCount.current = 0;
+      setShowMedicareQR(false);
       setEditingMedicare(true);
     } else {
       medTapTimer.current = setTimeout(() => { medTapCount.current = 0; }, 1500);
@@ -32,10 +36,12 @@ export default function Wallet() {
   }, []);
 
   const handleHealthcareTap = useCallback(() => {
+    if (hcTapCount.current === 0) setShowHealthcareQR(true);
     hcTapCount.current += 1;
     if (hcTapTimer.current) clearTimeout(hcTapTimer.current);
     if (hcTapCount.current >= 5) {
       hcTapCount.current = 0;
+      setShowHealthcareQR(false);
       setEditingHealthcare(true);
     } else {
       hcTapTimer.current = setTimeout(() => { hcTapCount.current = 0; }, 1500);
@@ -66,7 +72,7 @@ export default function Wallet() {
           className="cursor-pointer select-none"
           data-testid="wallet-healthcare-tappable"
         >
-          <HealthcareCard data={healthcareCard} />
+          <HealthcareCard data={healthcareCard} showQR={showHealthcareQR} />
         </div>
         <AnimatePresence>
           {editingHealthcare && (
@@ -86,7 +92,7 @@ export default function Wallet() {
           className="cursor-pointer select-none"
           data-testid="wallet-medicare-tappable"
         >
-          <MedicareCard data={medicareCard} />
+          <MedicareCard data={medicareCard} showQR={showMedicareQR} />
         </div>
         <AnimatePresence>
           {editingMedicare && (

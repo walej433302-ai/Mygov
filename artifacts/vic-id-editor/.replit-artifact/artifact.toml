@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/vic-id-editor/"
+title = "Service Victoria – Licence Editor"
+version = "1.0.0"
+id = "artifacts/vic-id-editor"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/vic-id-editor/" ]
+localPort = 23472
+
+[services.development]
+run = "pnpm --filter @workspace/vic-id-editor run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/vic-id-editor", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/vic-id-editor/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23472"
+BASE_PATH = "/vic-id-editor/"

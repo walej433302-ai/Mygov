@@ -14,16 +14,20 @@ export default function Medicare() {
   const [activeTab, setActiveTab] = useState<'medicare' | 'health' | 'claims' | 'history'>('medicare');
   const [isEditingMedicare, setIsEditingMedicare] = useState(false);
   const [isEditingHealthcare, setIsEditingHealthcare] = useState(false);
+  const [showMedicareQR, setShowMedicareQR] = useState(false);
+  const [showHealthcareQR, setShowHealthcareQR] = useState(false);
   const medicareTabCount = useRef(0);
   const medicareTabTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const healthcareTabCount = useRef(0);
   const healthcareTabTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleMedicareCardTap = useCallback(() => {
+    if (medicareTabCount.current === 0) setShowMedicareQR(true);
     medicareTabCount.current += 1;
     if (medicareTabTimer.current) clearTimeout(medicareTabTimer.current);
     if (medicareTabCount.current >= 5) {
       medicareTabCount.current = 0;
+      setShowMedicareQR(false);
       setIsEditingMedicare(true);
     } else {
       medicareTabTimer.current = setTimeout(() => {
@@ -33,10 +37,12 @@ export default function Medicare() {
   }, []);
 
   const handleHealthcareCardTap = useCallback(() => {
+    if (healthcareTabCount.current === 0) setShowHealthcareQR(true);
     healthcareTabCount.current += 1;
     if (healthcareTabTimer.current) clearTimeout(healthcareTabTimer.current);
     if (healthcareTabCount.current >= 5) {
       healthcareTabCount.current = 0;
+      setShowHealthcareQR(false);
       setIsEditingHealthcare(true);
     } else {
       healthcareTabTimer.current = setTimeout(() => {
@@ -104,7 +110,7 @@ export default function Medicare() {
               {activeTab === 'medicare' && (
                 <div className="space-y-4">
                   <div onClick={handleMedicareCardTap} className="cursor-pointer select-none" data-testid="medicare-card-tappable">
-                    <MedicareCard data={medicareCard} />
+                    <MedicareCard data={medicareCard} showQR={showMedicareQR} />
                   </div>
 
                   {isEditingMedicare && (
@@ -138,7 +144,7 @@ export default function Medicare() {
               {activeTab === 'health' && (
                 <div className="space-y-4">
                   <div onClick={handleHealthcareCardTap} className="cursor-pointer select-none" data-testid="healthcare-card-tappable">
-                    <HealthcareCard data={healthcareCard} />
+                    <HealthcareCard data={healthcareCard} showQR={showHealthcareQR} />
                   </div>
 
                   {isEditingHealthcare && (
